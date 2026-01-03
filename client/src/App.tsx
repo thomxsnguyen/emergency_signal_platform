@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import EarthquakeMap from "./components/EarthquakeMap";
 
 interface Earthquake {
   id: string;
@@ -60,13 +61,7 @@ function App() {
       {!loading && !error && (
         <div>
           <p>Found {earthquakes.length} earthquakes</p>
-          <ul className="earthquake-list">
-            {earthquakes.slice(0, 10).map((eq) => (
-              <li key={eq.id}>
-                <strong>Magnitude {eq.magnitude}</strong> - {eq.place}
-              </li>
-            ))}
-          </ul>
+          <EarthquakeMap earthquakes={earthquakes} />
         </div>
       )}
     </div>

@@ -1,8 +1,46 @@
 #root {
-  max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 1rem;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.app-container h1 {
+  margin-bottom: 0.5rem;
+}
+
+.app-container select {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+/* Leaflet map container */
+.leaflet-container {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  width: 90vw !important;
+  height: 70vh !important;
+}
+
+.map-wrapper {
+  width: 90vw;
+  display: flex;
+  justify-content: center;
 }
 
 .logo {
