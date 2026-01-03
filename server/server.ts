@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { getFromCache, setCache } from "./cache";
 
 const app = express();
 const PORT = 3001;
@@ -22,7 +23,16 @@ app.get("/api/earthquakes", async (req, res) => {
   try {
     const timeRange = (req.query.timeRange as string) || "hour";
     const endpoint = timeRangeMap[timeRange] || timeRangeMap.hour;
+    const cacheKey = `earthquakes_${timeRange}`;
 
+    // Check cache first
+    const cachedData = getFromCache(cacheKey);
+    if (cachedData) {
+      console.log(`Cache hit for ${timeRange}`);
+      return res.json(cachedData);
+    }
+
+    console.log(`Cache miss for ${timeRange}, fetching from USGS...`);
     const response = await fetch(`${USGS_BASE_URL}/${endpoint}`);
     const data = await response.json();
 
@@ -39,7 +49,12 @@ app.get("/api/earthquakes", async (req, res) => {
       };
     });
 
-    res.json({ earthquakes, count: earthquakes.length });
+    const result = { earthquakes, count: earthquakes.length };
+
+    // Store in cache
+    setCache(cacheKey, result);
+
+    res.json(result);
   } catch (error) {
     console.error("Error fetching earthquake data:", error);
     res.status(500).json({ error: "Failed to fetch earthquake data" });
