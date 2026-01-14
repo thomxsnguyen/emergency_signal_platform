@@ -1,0 +1,19 @@
+[2026-01-14T10:04:39.305Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-01-14T10:05:14.325Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-01-14T10:05:14.327Z] [INFO] Cache miss for hour, fetching from USGS API
+[2026-01-14T10:05:14.499Z] [INFO] Cached 2 earthquakes for hour
+[2026-01-14T10:05:14.502Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"177ms"}
+[2026-01-14T10:05:14.506Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-01-14T10:05:14.507Z] [INFO] Cache hit for time range: hour
+[2026-01-14T10:05:14.507Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"1ms"}
+[2026-01-14T10:05:17.954Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"day"},"ip":"::1"}
+[2026-01-14T10:05:17.954Z] [INFO] Cache miss for day, fetching from USGS API
+[2026-01-14T10:05:17.988Z] [INFO] Cached 260 earthquakes for day
+[2026-01-14T10:05:17.990Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"37ms"}
+[2026-01-14T10:05:21.100Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-01-14T10:05:21.100Z] [INFO] Cache hit for time range: hour
+[2026-01-14T10:05:21.102Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":304,"duration":"2ms"}
+[2026-01-14T10:05:22.219Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"week"},"ip":"::1"}
+[2026-01-14T10:05:22.220Z] [INFO] Cache miss for week, fetching from USGS API
+[2026-01-14T10:05:22.621Z] [INFO] Cached 1741 earthquakes for week
+[2026-01-14T10:05:22.623Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"404ms"}

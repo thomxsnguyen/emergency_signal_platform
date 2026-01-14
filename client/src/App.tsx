@@ -1,7 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import EarthquakeMap from "./components/EarthquakeMap";
+import ErrorBoundary from "./components/ErrorBoundary";
 
+// Constants
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const TIME_RANGES = [
+  { value: "hour", label: "Past Hour" },
+  { value: "day", label: "Past Day" },
+  { value: "week", label: "Past Week" },
+  { value: "month", label: "Past Month" },
+] as const;
+
+// Type definitions
 interface Earthquake {
   id: string;
   timestamp: number;
@@ -12,59 +23,156 @@ interface Earthquake {
   place: string;
 }
 
-function App() {
-  const [timeRange, setTimeRange] = useState("hour");
-  const [earthquakes, setEarthquakes] = useState<Earthquake[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+interface ApiResponse {
+  earthquakes: Earthquake[];
+  count: number;
+  cached?: boolean;
+  source?: string;
+}
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+interface FetchState {
+  loading: boolean;
+  error: string | null;
+  data: Earthquake[];
+}
+
+function App() {
+  const [timeRange, setTimeRange] = useState<string>("hour");
+  const [fetchState, setFetchState] = useState<FetchState>({
+    loading: false,
+    error: null,
+    data: [],
+  });
+
+  const fetchEarthquakes = useCallback(async (range: string) => {
+    setFetchState((prev) => ({ ...prev, loading: true, error: null }));
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/earthquakes?timeRange=${range}`,
+        {
+          signal: controller.signal,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(
+          `Server responded with ${response.status}: ${response.statusText}`
+        );
+      }
+
+      const data: ApiResponse = await response.json();
+
+      if (!data.earthquakes || !Array.isArray(data.earthquakes)) {
+        throw new Error("Invalid response format from server");
+      }
+
+      setFetchState({
+        loading: false,
+        error: null,
+        data: data.earthquakes,
+      });
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.name === "AbortError"
+            ? "Request timed out. Please try again."
+            : err.message
+          : "An unexpected error occurred";
+
+      setFetchState({
+        loading: false,
+        error: errorMessage,
+        data: [],
+      });
+
+      console.error("Error fetching earthquake data:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEarthquakes(timeRange);
+  }, [timeRange, fetchEarthquakes]);
+
+  const handleTimeRangeChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setTimeRange(event.target.value);
   };
 
-  useEffect(() => {
-    const fetchEarthquakes = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(
-          `http://localhost:3001/api/earthquakes?timeRange=${timeRange}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch earthquake data");
-        }
-        const data = await response.json();
-        setEarthquakes(data.earthquakes);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEarthquakes();
-  }, [timeRange]);
+  const handleRetry = () => {
+    fetchEarthquakes(timeRange);
+  };
 
   return (
-    <div className="app-container">
-      <h1>Earthquake Data</h1>
-      <label htmlFor="time-range">Select Time Range:</label>
-      <select id="time-range" value={timeRange} onChange={handleChange}>
-        <option value="hour">Past Hour</option>
-        <option value="day">Past Day</option>
-        <option value="week">Past Week</option>
-        <option value="month">Past Month</option>
-      </select>
+    <ErrorBoundary>
+      <div className="app-container">
+        <header className="app-header">
+          <h1>Global Earthquake Monitoring System</h1>
+          <p className="subtitle">Real-time seismic activity data from USGS</p>
+        </header>
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
-      {!loading && !error && (
-        <div>
-          <p>Found {earthquakes.length} earthquakes</p>
-          <EarthquakeMap earthquakes={earthquakes} />
+        <div className="controls">
+          <label htmlFor="time-range" className="time-range-label">
+            Select Time Range:
+          </label>
+          <select
+            id="time-range"
+            value={timeRange}
+            onChange={handleTimeRangeChange}
+            disabled={fetchState.loading}
+            className="time-range-select"
+          >
+            {TIME_RANGES.map((range) => (
+              <option key={range.value} value={range.value}>
+                {range.label}
+              </option>
+            ))}
+          </select>
         </div>
-      )}
-    </div>
+
+        {fetchState.loading && (
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <p>Loading earthquake data...</p>
+          </div>
+        )}
+
+        {fetchState.error && (
+          <div className="error-state">
+            <p className="error-message">⚠️ {fetchState.error}</p>
+            <button onClick={handleRetry} className="retry-button">
+              Retry
+            </button>
+          </div>
+        )}
+
+        {!fetchState.loading && !fetchState.error && (
+          <div className="content">
+            <div className="stats">
+              <span className="stat-item">
+                <strong>{fetchState.data.length}</strong> earthquakes detected
+              </span>
+              <span className="stat-item">
+                Time range:{" "}
+                <strong>
+                  {TIME_RANGES.find((r) => r.value === timeRange)?.label}
+                </strong>
+              </span>
+            </div>
+            <EarthquakeMap earthquakes={fetchState.data} />
+          </div>
+        )}
+      </div>
+    </ErrorBoundary>
   );
 }
 
