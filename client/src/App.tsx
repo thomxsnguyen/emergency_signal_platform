@@ -116,8 +116,25 @@ function App() {
     <ErrorBoundary>
       <div className="app-container">
         <header className="app-header">
-          <h1>Global Earthquake Monitoring System</h1>
-          <p className="subtitle">Real-time seismic activity data from USGS</p>
+          <div className="official-banner">
+            <p className="banner-text">
+              An official website of the United States government
+            </p>
+          </div>
+          <div className="header-content">
+            <div className="header-seal">
+              <div className="seal-circle">
+                <span className="seal-text">USGS</span>
+              </div>
+            </div>
+            <div className="header-titles">
+              <h1>U.S. Geological Survey</h1>
+              <h2 className="system-title">Emergency Hazards Program</h2>
+              <p className="subtitle">
+                Real-Time Disaster Monitoring & Notification System
+              </p>
+            </div>
+          </div>
         </header>
 
         <div className="controls">
@@ -157,20 +174,45 @@ function App() {
 
         {!fetchState.loading && !fetchState.error && (
           <div className="content">
+            <div className="alert-box">
+              <div className="alert-icon">⚠️</div>
+              <div className="alert-content">
+                <strong>Emergency Alert System</strong>
+                <p>
+                  Displaying real-time seismic activity. Check for updates
+                  regularly.
+                </p>
+              </div>
+            </div>
             <div className="stats">
-              <span className="stat-item">
-                <strong>{fetchState.data.length}</strong> earthquakes detected
-              </span>
-              <span className="stat-item">
-                Time range:{" "}
-                <strong>
+              <div className="stat-card">
+                <div className="stat-value">{fetchState.data.length}</div>
+                <div className="stat-label">Earthquakes Detected</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-value">
                   {TIME_RANGES.find((r) => r.value === timeRange)?.label}
-                </strong>
-              </span>
+                </div>
+                <div className="stat-label">Time Period</div>
+              </div>
             </div>
             <EarthquakeMap earthquakes={fetchState.data} />
           </div>
         )}
+        <footer className="app-footer">
+          <div className="footer-content">
+            <p>
+              &copy; {new Date().getFullYear()} U.S. Geological Survey |
+              Department of the Interior
+            </p>
+            <div className="footer-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Accessibility</a>
+              <a href="#">FOIA</a>
+              <a href="#">Contact Us</a>
+            </div>
+          </div>
+        </footer>
       </div>
     </ErrorBoundary>
   );

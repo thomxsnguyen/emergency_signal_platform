@@ -17,3 +17,25 @@
 [2026-01-14T10:05:22.220Z] [INFO] Cache miss for week, fetching from USGS API
 [2026-01-14T10:05:22.621Z] [INFO] Cached 1741 earthquakes for week
 [2026-01-14T10:05:22.623Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"404ms"}
+[2026-01-14T10:06:17.699Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-01-14T10:06:19.250Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-01-14T10:06:19.251Z] [INFO] Cache miss for hour, fetching from USGS API
+[2026-01-14T10:06:19.372Z] [INFO] Cached 2 earthquakes for hour
+[2026-01-14T10:06:19.374Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"124ms"}
+[2026-01-14T10:06:19.374Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-01-14T10:06:19.375Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"1ms"}
+[2026-01-14T10:06:19.375Z] [INFO] Cache hit for time range: hour
+[2026-01-14T10:07:20.312Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-01-14T10:07:20.314Z] [INFO] Cache hit for time range: hour
+[2026-01-14T10:07:20.315Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":304,"duration":"4ms"}
+[2026-01-14T10:08:28.062Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"day"},"ip":"::1"}
+[2026-01-14T10:08:28.062Z] [INFO] Cache miss for day, fetching from USGS API
+[2026-01-14T10:08:28.516Z] [INFO] Cached 259 earthquakes for day
+[2026-01-14T10:08:28.522Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"460ms"}
+[2026-01-14T10:08:29.914Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"week"},"ip":"::1"}
+[2026-01-14T10:08:29.914Z] [INFO] Cache miss for week, fetching from USGS API
+[2026-01-14T10:08:30.419Z] [INFO] Cached 1741 earthquakes for week
+[2026-01-14T10:08:30.422Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"509ms"}
+[2026-01-14T10:08:46.022Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"week"},"ip":"::1"}
+[2026-01-14T10:08:46.022Z] [INFO] Cache hit for time range: week
+[2026-01-14T10:08:46.031Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"10ms"}
