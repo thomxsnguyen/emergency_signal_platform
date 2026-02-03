@@ -58,3 +58,17 @@
 [2026-02-03T00:17:15.129Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
 [2026-02-03T00:17:15.129Z] [INFO] Cache hit for time range: hour
 [2026-02-03T00:17:15.130Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":304,"duration":"1ms"}
+[2026-02-03T00:23:30.585Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-03T00:23:30.586Z] [INFO] Cache miss for hour, fetching from USGS API
+[2026-02-03T00:23:30.753Z] [INFO] Cached 5 earthquakes for hour
+[2026-02-03T00:23:30.755Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"170ms"}
+[2026-02-03T00:23:30.756Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-03T00:23:30.756Z] [INFO] Cache hit for time range: hour
+[2026-02-03T00:23:30.757Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"2ms"}
+[2026-02-03T00:23:32.823Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"day"},"ip":"::1"}
+[2026-02-03T00:23:32.823Z] [INFO] Cache miss for day, fetching from USGS API
+[2026-02-03T00:23:32.909Z] [INFO] Cached 263 earthquakes for day
+[2026-02-03T00:23:32.910Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"87ms"}
+[2026-02-03T00:23:34.693Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-03T00:23:34.693Z] [INFO] Cache hit for time range: hour
+[2026-02-03T00:23:34.694Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":304,"duration":"1ms"}

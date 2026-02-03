@@ -1,21 +1,20 @@
 import axios from "axios";
-// Fetch and store flood data from USGS Continuous Values API
 export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
-  const apiUrl = "https://api.waterdata.usgs.gov/ogcapi/v0/collections/continuous/items";
+  const apiUrl =
+    "https://api.waterdata.usgs.gov/ogcapi/v0/collections/continuous/items";
   try {
-    // Example: fetch recent water level data (customize query as needed)
     const response = await axios.get(apiUrl, {
       params: {
-        // You can filter by time, location, etc. For demo, fetch recent data
         limit: 100,
       },
     });
     const items = response.data.features || [];
 
-    // Map API data to flood table schema
     const floods = items.map((item: any) => ({
       id: item.id,
-      timestamp: new Date(item.properties.resultTime || item.properties.observed).getTime(),
+      timestamp: new Date(
+        item.properties.resultTime || item.properties.observed,
+      ).getTime(),
       longitude: item.geometry?.coordinates[0] || 0,
       latitude: item.geometry?.coordinates[1] || 0,
       severity: item.properties.parameter || "unknown",
@@ -31,14 +30,18 @@ export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
   }
 }
 
-// Store floods in database
-export async function storeFloods(floods: any[], timeRange: string): Promise<void> {
+export async function storeFloods(
+  floods: any[],
+  timeRange: string,
+): Promise<void> {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
 
     // Delete old data for this time range
-    await connection.query("DELETE FROM floods WHERE time_range = ?", [timeRange]);
+    await connection.query("DELETE FROM floods WHERE time_range = ?", [
+      timeRange,
+    ]);
 
     // Insert new data
     if (floods.length > 0) {
@@ -57,7 +60,7 @@ export async function storeFloods(floods: any[], timeRange: string): Promise<voi
         `INSERT INTO floods 
          (id, timestamp, longitude, latitude, severity, area_affected, source, time_range) 
          VALUES ?`,
-        [values]
+        [values],
       );
     }
 
@@ -68,7 +71,7 @@ export async function storeFloods(floods: any[], timeRange: string): Promise<voi
        ON DUPLICATE KEY UPDATE 
        last_updated = CURRENT_TIMESTAMP, 
        record_count = ?`,
-      [timeRange, floods.length, floods.length]
+      [timeRange, floods.length, floods.length],
     );
 
     await connection.commit();
@@ -87,7 +90,7 @@ export async function getFloods(timeRange: string): Promise<any[]> {
      FROM floods 
      WHERE time_range = ? 
      ORDER BY severity DESC`,
-    [timeRange]
+    [timeRange],
   );
   return rows as any[];
 }
@@ -168,7 +171,7 @@ export async function initializeDatabase() {
 // Store earthquakes in database
 export async function storeEarthquakes(
   earthquakes: any[],
-  timeRange: string
+  timeRange: string,
 ): Promise<void> {
   const connection = await pool.getConnection();
   try {
@@ -196,7 +199,7 @@ export async function storeEarthquakes(
         `INSERT INTO earthquakes 
          (id, timestamp, longitude, latitude, depth, magnitude, place, time_range) 
          VALUES ?`,
-        [values]
+        [values],
       );
     }
 
@@ -207,7 +210,7 @@ export async function storeEarthquakes(
        ON DUPLICATE KEY UPDATE 
        last_updated = CURRENT_TIMESTAMP, 
        record_count = ?`,
-      [timeRange, earthquakes.length, earthquakes.length]
+      [timeRange, earthquakes.length, earthquakes.length],
     );
 
     await connection.commit();
@@ -226,7 +229,7 @@ export async function getEarthquakes(timeRange: string): Promise<any[]> {
      FROM earthquakes 
      WHERE time_range = ? 
      ORDER BY magnitude DESC`,
-    [timeRange]
+    [timeRange],
   );
   return rows as any[];
 }
@@ -238,7 +241,7 @@ export async function isCacheValid(timeRange: string): Promise<boolean> {
      FROM cache_metadata 
      WHERE cache_key = ? 
      AND last_updated > DATE_SUB(NOW(), INTERVAL 5 MINUTE)`,
-    [timeRange]
+    [timeRange],
   );
   return rows.length > 0;
 }
