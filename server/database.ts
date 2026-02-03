@@ -77,37 +77,45 @@ export async function initializeDatabase() {
   }
 }
 
-// Fetch and store flood data from USGS Continuous Values API
+// Fetch and store flood data from USGS Real-Time Flood Impacts (RTFI) API
 export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
   const apiUrl =
-    "https://api.waterdata.usgs.gov/ogcapi/v0/collections/continuous/items";
+    "https://api.waterdata.usgs.gov/rtfi-api/v1/flood-impact-locations";
   try {
     const response = await axios.get(apiUrl, {
       params: {
-        limit: 100,
+        f: "json",
       },
     });
-    const items = response.data.features || [];
+
+    const items = response.data.features || response.data || [];
 
     const floods = items
       .map((item: any) => {
-        const timestamp = item.properties?.resultTime || item.properties?.observed;
-        const lon = item.geometry?.coordinates?.[0];
-        const lat = item.geometry?.coordinates?.[1];
-        
+        // Handle both GeoJSON and direct object formats
+        const props = item.properties || item;
+        const coords = item.geometry?.coordinates || [
+          item.longitude,
+          item.latitude,
+        ];
+
+        const lon = coords[0];
+        const lat = coords[1];
+
         // Skip items with invalid data
-        if (!timestamp || lon === undefined || lat === undefined) {
+        if (lon === undefined || lat === undefined) {
           return null;
         }
-        
+
         return {
-          id: item.id || `flood_${Date.now()}_${Math.random()}`,
-          timestamp: new Date(timestamp).getTime(),
+          id: item.id || props.id || `flood_${Date.now()}_${Math.random()}`,
+          timestamp: props.timestamp || props.dateTime || Date.now(),
           longitude: parseFloat(lon),
           latitude: parseFloat(lat),
-          severity: item.properties?.parameter || "unknown",
-          area_affected: item.properties?.siteName || "unknown",
-          source: "USGS Continuous Values API",
+          severity: props.severity || props.status || "unknown",
+          area_affected:
+            props.location || props.site_name || props.siteName || "unknown",
+          source: "USGS Real-Time Flood Impacts API",
           time_range: timeRange,
         };
       })

@@ -311,3 +311,10 @@
 [2026-02-03T01:29:43.303Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"617ms"}
 [2026-02-03T01:29:43.317Z] [INFO] Incoming request | {"method":"GET","path":"/api/floods","query":{"timeRange":"month"},"ip":"::1"}
 [2026-02-03T01:29:43.773Z] [INFO] Request completed | {"method":"GET","path":"/api/floods","statusCode":200,"duration":"456ms"}
+[2026-02-03T01:30:46.240Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-03T01:30:46.240Z] [INFO] Cache hit for time range: hour
+[2026-02-03T01:30:46.241Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"2ms"}
+[2026-02-03T01:30:46.385Z] [INFO] Incoming request | {"method":"GET","path":"/api/floods","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-03T01:30:47.579Z] [INFO] Request completed | {"method":"GET","path":"/api/floods","statusCode":200,"duration":"1194ms"}
+[2026-02-03T01:33:42.350Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-03T01:34:10.212Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
