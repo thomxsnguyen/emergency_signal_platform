@@ -106,3 +106,9 @@
 [2026-02-03T01:38:46.546Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"3ms"}
 [2026-02-03T01:38:47.404Z] [ERROR] Error fetching flood data for day: | {"error":"Duplicate entry 'flood_001' for key 'floods.PRIMARY'"}
 [2026-02-03T01:38:47.405Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"7ms"}
+[2026-02-03T01:58:12.504Z] [ERROR] Error fetching flood data for hour: | {"error":"Request failed with status code 404"}
+[2026-02-03T01:58:12.505Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"468ms"}
+[2026-02-03T01:59:37.060Z] [ERROR] Error fetching flood data for day: | {"error":"Duplicate entry 'flood_153' for key 'floods.PRIMARY'"}
+[2026-02-03T01:59:37.060Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"153ms"}
+[2026-02-03T01:59:38.054Z] [ERROR] Error fetching flood data for day: | {"error":"Duplicate entry 'flood_153' for key 'floods.PRIMARY'"}
+[2026-02-03T01:59:38.055Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"90ms"}

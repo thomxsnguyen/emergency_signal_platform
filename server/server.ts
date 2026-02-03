@@ -4,13 +4,13 @@ import dotenv from "dotenv";
 import { getFromCache, setCache } from "./cache";
 import { logger, requestLogger, errorLogger } from "./logger";
 import { validateTimeRange, rateLimit } from "./middleware";
+import { initializeDatabase } from "./database";
 import {
   getFloods,
   fetchAndStoreFloods,
   isCacheValid,
-  initializeDatabase,
-} from "./database";
-import { processEarthquakeData } from "./api";
+  processEarthquakeData,
+} from "./api";
 import { EarthquakeResponse } from "./types";
 
 // Load environment variables

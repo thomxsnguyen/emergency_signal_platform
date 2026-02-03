@@ -30,7 +30,7 @@ export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
     const response = await axios.get(
-      "https://api.waterdata.usgs.gov/rtfi-api/v1/referencepoints/flooding",
+      "https://api.waterdata.usgs.gov/rtfi-api/referencepoints",
       {
         signal: controller.signal as any,
         headers: { "User-Agent": "EmergencySignalPlatform/1.0" },
@@ -42,20 +42,12 @@ export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
     }
     // Map API data
     let floods = response.data.map((flood: any) => ({
-      id:
-        flood.id ||
-        `flood_${flood.properties?.referencePointIdentifier || Math.random()}`,
-      timestamp: flood.properties?.eventTime
-        ? new Date(flood.properties.eventTime).getTime()
-        : Date.now(),
-      longitude: flood.geometry?.coordinates?.[0] || 0,
-      latitude: flood.geometry?.coordinates?.[1] || 0,
-      severity:
-        flood.properties?.severity || flood.properties?.stage || "unknown",
-      area_affected:
-        flood.properties?.name ||
-        flood.properties?.referencePointName ||
-        "Unknown Area",
+      id: `flood_${flood.id}`,
+      timestamp: Date.now(),
+      longitude: flood.longitude || 0,
+      latitude: flood.latitude || 0,
+      severity: flood.is_flooding ? "major" : "minor",
+      area_affected: flood.site_name || "Unknown Area",
       source: "USGS Real-Time Flood Impacts",
       time_range: timeRange,
     }));
