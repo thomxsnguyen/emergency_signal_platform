@@ -46,6 +46,24 @@ export async function initializeDatabase() {
       )
     `);
 
+    // Create floods table
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS floods (
+        id VARCHAR(255) PRIMARY KEY,
+        timestamp BIGINT NOT NULL,
+        longitude DECIMAL(10, 6) NOT NULL,
+        latitude DECIMAL(10, 6) NOT NULL,
+        severity VARCHAR(50),
+        area_affected VARCHAR(255),
+        source VARCHAR(255),
+        time_range VARCHAR(50),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_timestamp (timestamp),
+        INDEX idx_time_range (time_range),
+        INDEX idx_severity (severity)
+      )
+    `);
+
     connection.release();
     console.log("Database initialized successfully");
   } catch (error) {

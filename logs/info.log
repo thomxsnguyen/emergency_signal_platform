@@ -39,3 +39,22 @@
 [2026-01-14T10:08:46.022Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"week"},"ip":"::1"}
 [2026-01-14T10:08:46.022Z] [INFO] Cache hit for time range: week
 [2026-01-14T10:08:46.031Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"10ms"}
+[2026-02-03T00:16:47.828Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-03T00:16:51.321Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-03T00:16:51.322Z] [INFO] Cache miss for hour, fetching from USGS API
+[2026-02-03T00:16:51.506Z] [INFO] Cached 7 earthquakes for hour
+[2026-02-03T00:16:51.508Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"187ms"}
+[2026-02-03T00:16:51.509Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-03T00:16:51.509Z] [INFO] Cache hit for time range: hour
+[2026-02-03T00:16:51.510Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"1ms"}
+[2026-02-03T00:16:54.747Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"day"},"ip":"::1"}
+[2026-02-03T00:16:54.748Z] [INFO] Cache miss for day, fetching from USGS API
+[2026-02-03T00:16:54.785Z] [INFO] Cached 265 earthquakes for day
+[2026-02-03T00:16:54.786Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"39ms"}
+[2026-02-03T00:17:11.990Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"week"},"ip":"::1"}
+[2026-02-03T00:17:11.991Z] [INFO] Cache miss for week, fetching from USGS API
+[2026-02-03T00:17:12.194Z] [INFO] Cached 2009 earthquakes for week
+[2026-02-03T00:17:12.197Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"207ms"}
+[2026-02-03T00:17:15.129Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-03T00:17:15.129Z] [INFO] Cache hit for time range: hour
+[2026-02-03T00:17:15.130Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":304,"duration":"1ms"}
