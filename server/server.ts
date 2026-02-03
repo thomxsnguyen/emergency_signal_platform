@@ -26,17 +26,19 @@ app.get(
         fetchedAt: new Date().toISOString(),
       });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       logger.error(`Error fetching flood data for ${timeRange}:`, {
         error: errorMessage,
       });
       res.status(500).json({
         error: "Failed to fetch flood data",
-        message: process.env.NODE_ENV === "development" ? errorMessage : undefined,
+        message:
+          process.env.NODE_ENV === "development" ? errorMessage : undefined,
         timeRange,
       });
     }
-  }
+  },
 );
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
@@ -60,7 +62,7 @@ app.use(
     origin: process.env.ALLOWED_ORIGINS?.split(",") || "*",
     methods: ["GET", "POST"],
     credentials: true,
-  })
+  }),
 );
 app.use(express.json());
 app.use(requestLogger);
@@ -103,7 +105,7 @@ interface ProcessedEarthquake {
 
 // Helper function to process earthquake data
 function processEarthquakeData(
-  features: EarthquakeFeature[]
+  features: EarthquakeFeature[],
 ): ProcessedEarthquake[] {
   return features.map((feature) => {
     const [longitude, latitude, depth] = feature.geometry.coordinates;
@@ -197,7 +199,7 @@ app.get(
         timeRange,
       });
     }
-  }
+  },
 );
 
 // 404 handler
