@@ -57,7 +57,9 @@ function App() {
     earthquakes: [],
     floods: [],
   });
-  const [activeTab, setActiveTab] = useState<"earthquakes" | "floods">("earthquakes");
+  const [activeTab, setActiveTab] = useState<"earthquakes" | "floods">(
+    "earthquakes",
+  );
 
   const fetchData = useCallback(async (range: string) => {
     setFetchState((prev) => ({ ...prev, loading: true, error: null }));
@@ -72,14 +74,14 @@ function App() {
         {
           signal: eqController.signal,
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
 
       clearTimeout(eqTimeoutId);
 
       if (!eqResponse.ok) {
         throw new Error(
-          `Server responded with ${eqResponse.status}: ${eqResponse.statusText}`
+          `Server responded with ${eqResponse.status}: ${eqResponse.statusText}`,
         );
       }
 
@@ -94,14 +96,14 @@ function App() {
         {
           signal: floodController.signal,
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
 
       clearTimeout(floodTimeoutId);
 
       if (!floodResponse.ok) {
         throw new Error(
-          `Server responded with ${floodResponse.status}: ${floodResponse.statusText}`
+          `Server responded with ${floodResponse.status}: ${floodResponse.statusText}`,
         );
       }
 
@@ -227,8 +229,8 @@ function App() {
               <div className="alert-content">
                 <strong>Emergency Alert System</strong>
                 <p>
-                  Displaying real-time disaster monitoring data. Check for updates
-                  regularly.
+                  Displaying real-time disaster monitoring data. Check for
+                  updates regularly.
                 </p>
               </div>
             </div>
@@ -236,7 +238,9 @@ function App() {
               {activeTab === "earthquakes" && (
                 <>
                   <div className="stat-card">
-                    <div className="stat-value">{fetchState.earthquakes.length}</div>
+                    <div className="stat-value">
+                      {fetchState.earthquakes.length}
+                    </div>
                     <div className="stat-label">Earthquakes Detected</div>
                   </div>
                   <div className="stat-card">
@@ -265,9 +269,7 @@ function App() {
             {activeTab === "earthquakes" && (
               <EarthquakeMap earthquakes={fetchState.earthquakes} />
             )}
-            {activeTab === "floods" && (
-              <FloodMap floods={fetchState.floods} />
-            )}
+            {activeTab === "floods" && <FloodMap floods={fetchState.floods} />}
           </div>
         )}
         <footer className="app-footer">

@@ -15,3 +15,68 @@
 [2026-02-03T00:33:45.343Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"2ms"}
 [2026-02-03T00:33:45.990Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
 [2026-02-03T00:33:45.991Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"5ms"}
+[2026-02-03T01:13:16.803Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:13:16.804Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"29ms"}
+[2026-02-03T01:13:16.808Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:13:16.808Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"3ms"}
+[2026-02-03T01:13:17.669Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:13:17.670Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"6ms"}
+[2026-02-03T01:13:17.894Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:13:17.895Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"5ms"}
+[2026-02-03T01:13:18.036Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:13:18.036Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"3ms"}
+[2026-02-03T01:13:18.174Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:13:18.175Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"8ms"}
+[2026-02-03T01:13:28.746Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:13:28.747Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"15ms"}
+[2026-02-03T01:13:28.750Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:13:28.751Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"3ms"}
+[2026-02-03T01:13:31.154Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:13:31.155Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"4ms"}
+[2026-02-03T01:13:31.159Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:13:31.159Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"4ms"}
+[2026-02-03T01:15:01.992Z] [ERROR] Error fetching earthquake data for hour: | {"error":"fetch failed"}
+[2026-02-03T01:15:11.491Z] [ERROR] Error fetching earthquake data for hour: | {"error":"fetch failed"}
+[2026-02-03T01:15:12.989Z] [ERROR] Error fetching earthquake data for hour: | {"error":"fetch failed"}
+[2026-02-03T01:17:30.150Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:17:30.150Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"82ms"}
+[2026-02-03T01:17:30.876Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:17:30.876Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"3ms"}
+[2026-02-03T01:18:28.203Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:18:28.204Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"18ms"}
+[2026-02-03T01:18:28.209Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:18:28.210Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"4ms"}
+[2026-02-03T01:18:29.800Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:18:29.802Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"14ms"}
+[2026-02-03T01:18:30.371Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:18:30.372Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"6ms"}
+[2026-02-03T01:18:30.503Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:18:30.504Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"4ms"}
+[2026-02-03T01:18:30.644Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: NO)"}
+[2026-02-03T01:18:30.645Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"4ms"}
+[2026-02-03T01:21:37.358Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: YES)"}
+[2026-02-03T01:21:37.358Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"36ms"}
+[2026-02-03T01:21:38.334Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: YES)"}
+[2026-02-03T01:21:38.339Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"18ms"}
+[2026-02-03T01:24:17.165Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: YES)"}
+[2026-02-03T01:24:17.166Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"25ms"}
+[2026-02-03T01:24:17.175Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: YES)"}
+[2026-02-03T01:24:17.175Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"8ms"}
+[2026-02-03T01:24:18.215Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: YES)"}
+[2026-02-03T01:24:18.216Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"20ms"}
+[2026-02-03T01:24:18.680Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: YES)"}
+[2026-02-03T01:24:18.680Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"10ms"}
+[2026-02-03T01:24:47.154Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: YES)"}
+[2026-02-03T01:24:47.155Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"17ms"}
+[2026-02-03T01:24:47.575Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: YES)"}
+[2026-02-03T01:24:47.576Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"15ms"}
+[2026-02-03T01:24:47.709Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"11ms"}
+[2026-02-03T01:24:47.708Z] [ERROR] Error fetching flood data for hour: | {"error":"Access denied for user 'root'@'localhost' (using password: YES)"}
+[2026-02-03T01:27:27.273Z] [ERROR] Error fetching flood data for hour: | {"error":"Table 'earthquake_db.cache_metadata' doesn't exist"}
+[2026-02-03T01:27:27.274Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"64ms"}
+[2026-02-03T01:28:09.245Z] [ERROR] Error fetching flood data for hour: | {"error":"Unknown column 'NaN' in 'field list'"}
+[2026-02-03T01:28:09.246Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"672ms"}
+[2026-02-03T01:28:09.613Z] [ERROR] Error fetching flood data for hour: | {"error":"Unknown column 'NaN' in 'field list'"}
+[2026-02-03T01:28:09.614Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"368ms"}
+[2026-02-03T01:28:18.044Z] [ERROR] Error fetching flood data for hour: | {"error":"Unknown column 'NaN' in 'field list'"}
+[2026-02-03T01:28:18.044Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"584ms"}

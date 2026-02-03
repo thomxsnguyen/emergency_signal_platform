@@ -1,100 +1,9 @@
 import axios from "axios";
-export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
-  const apiUrl =
-    "https://api.waterdata.usgs.gov/ogcapi/v0/collections/continuous/items";
-  try {
-    const response = await axios.get(apiUrl, {
-      params: {
-        limit: 100,
-      },
-    });
-    const items = response.data.features || [];
-
-    const floods = items.map((item: any) => ({
-      id: item.id,
-      timestamp: new Date(
-        item.properties.resultTime || item.properties.observed,
-      ).getTime(),
-      longitude: item.geometry?.coordinates[0] || 0,
-      latitude: item.geometry?.coordinates[1] || 0,
-      severity: item.properties.parameter || "unknown",
-      area_affected: item.properties.siteName || "unknown",
-      source: "USGS Continuous Values API",
-      time_range: timeRange,
-    }));
-
-    await storeFloods(floods, timeRange);
-  } catch (error) {
-    console.error("Error fetching flood data:", error);
-    throw error;
-  }
-}
-
-export async function storeFloods(
-  floods: any[],
-  timeRange: string,
-): Promise<void> {
-  const connection = await pool.getConnection();
-  try {
-    await connection.beginTransaction();
-
-    // Delete old data for this time range
-    await connection.query("DELETE FROM floods WHERE time_range = ?", [
-      timeRange,
-    ]);
-
-    // Insert new data
-    if (floods.length > 0) {
-      const values = floods.map((f) => [
-        f.id,
-        f.timestamp,
-        f.longitude,
-        f.latitude,
-        f.severity,
-        f.area_affected,
-        f.source,
-        timeRange,
-      ]);
-
-      await connection.query(
-        `INSERT INTO floods 
-         (id, timestamp, longitude, latitude, severity, area_affected, source, time_range) 
-         VALUES ?`,
-        [values],
-      );
-    }
-
-    // Update cache metadata
-    await connection.query(
-      `INSERT INTO cache_metadata (cache_key, record_count) 
-       VALUES (?, ?) 
-       ON DUPLICATE KEY UPDATE 
-       last_updated = CURRENT_TIMESTAMP, 
-       record_count = ?`,
-      [timeRange, floods.length, floods.length],
-    );
-
-    await connection.commit();
-  } catch (error) {
-    await connection.rollback();
-    throw error;
-  } finally {
-    connection.release();
-  }
-}
-
-// Retrieve floods from database
-export async function getFloods(timeRange: string): Promise<any[]> {
-  const [rows] = await pool.query(
-    `SELECT id, timestamp, longitude, latitude, severity, area_affected, source 
-     FROM floods 
-     WHERE time_range = ? 
-     ORDER BY severity DESC`,
-    [timeRange],
-  );
-  return rows as any[];
-}
 import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
 
 // Database configuration
 const dbConfig = {
@@ -168,9 +77,51 @@ export async function initializeDatabase() {
   }
 }
 
-// Store earthquakes in database
-export async function storeEarthquakes(
-  earthquakes: any[],
+// Fetch and store flood data from USGS Continuous Values API
+export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
+  const apiUrl =
+    "https://api.waterdata.usgs.gov/ogcapi/v0/collections/continuous/items";
+  try {
+    const response = await axios.get(apiUrl, {
+      params: {
+        limit: 100,
+      },
+    });
+    const items = response.data.features || [];
+
+    const floods = items
+      .map((item: any) => {
+        const timestamp = item.properties?.resultTime || item.properties?.observed;
+        const lon = item.geometry?.coordinates?.[0];
+        const lat = item.geometry?.coordinates?.[1];
+        
+        // Skip items with invalid data
+        if (!timestamp || lon === undefined || lat === undefined) {
+          return null;
+        }
+        
+        return {
+          id: item.id || `flood_${Date.now()}_${Math.random()}`,
+          timestamp: new Date(timestamp).getTime(),
+          longitude: parseFloat(lon),
+          latitude: parseFloat(lat),
+          severity: item.properties?.parameter || "unknown",
+          area_affected: item.properties?.siteName || "unknown",
+          source: "USGS Continuous Values API",
+          time_range: timeRange,
+        };
+      })
+      .filter((item: any) => item !== null);
+
+    await storeFloods(floods, timeRange);
+  } catch (error) {
+    console.error("Error fetching flood data:", error);
+    throw error;
+  }
+}
+
+export async function storeFloods(
+  floods: any[],
   timeRange: string,
 ): Promise<void> {
   const connection = await pool.getConnection();
@@ -178,26 +129,26 @@ export async function storeEarthquakes(
     await connection.beginTransaction();
 
     // Delete old data for this time range
-    await connection.query("DELETE FROM earthquakes WHERE time_range = ?", [
+    await connection.query("DELETE FROM floods WHERE time_range = ?", [
       timeRange,
     ]);
 
     // Insert new data
-    if (earthquakes.length > 0) {
-      const values = earthquakes.map((eq) => [
-        eq.id,
-        eq.timestamp,
-        eq.longitude,
-        eq.latitude,
-        eq.depth,
-        eq.magnitude,
-        eq.place,
+    if (floods.length > 0) {
+      const values = floods.map((f) => [
+        f.id,
+        f.timestamp,
+        f.longitude,
+        f.latitude,
+        f.severity,
+        f.area_affected,
+        f.source,
         timeRange,
       ]);
 
       await connection.query(
-        `INSERT INTO earthquakes 
-         (id, timestamp, longitude, latitude, depth, magnitude, place, time_range) 
+        `INSERT INTO floods 
+         (id, timestamp, longitude, latitude, severity, area_affected, source, time_range) 
          VALUES ?`,
         [values],
       );
@@ -210,7 +161,7 @@ export async function storeEarthquakes(
        ON DUPLICATE KEY UPDATE 
        last_updated = CURRENT_TIMESTAMP, 
        record_count = ?`,
-      [timeRange, earthquakes.length, earthquakes.length],
+      [timeRange, floods.length, floods.length],
     );
 
     await connection.commit();
@@ -222,13 +173,13 @@ export async function storeEarthquakes(
   }
 }
 
-// Retrieve earthquakes from database
-export async function getEarthquakes(timeRange: string): Promise<any[]> {
+// Retrieve floods from database
+export async function getFloods(timeRange: string): Promise<any[]> {
   const [rows] = await pool.query(
-    `SELECT id, timestamp, longitude, latitude, depth, magnitude, place 
-     FROM earthquakes 
+    `SELECT id, timestamp, longitude, latitude, severity, area_affected, source 
+     FROM floods 
      WHERE time_range = ? 
-     ORDER BY magnitude DESC`,
+     ORDER BY severity DESC`,
     [timeRange],
   );
   return rows as any[];

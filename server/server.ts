@@ -4,7 +4,12 @@ import dotenv from "dotenv";
 import { getFromCache, setCache } from "./cache";
 import { logger, requestLogger, errorLogger } from "./logger";
 import { validateTimeRange, rateLimit } from "./middleware";
-import { getFloods, fetchAndStoreFloods, isCacheValid } from "./database";
+import {
+  getFloods,
+  fetchAndStoreFloods,
+  isCacheValid,
+  initializeDatabase,
+} from "./database";
 
 // Load environment variables
 dotenv.config();
@@ -113,11 +118,17 @@ app.get(
       // Fetch from USGS API
       logger.info(`Cache miss for ${timeRange}, fetching from USGS API`);
       const endpoint = TIME_RANGE_CONFIG[timeRange];
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
       const response = await fetch(`${USGS_BASE_URL}/${endpoint}`, {
         headers: {
           "User-Agent": "EarthquakePlatform/1.0",
         },
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`USGS API returned status ${response.status}`);
@@ -226,10 +237,16 @@ process.on("SIGINT", () => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  logger.info(`Server started successfully`, {
-    port: PORT,
-    environment: process.env.NODE_ENV || "development",
-    nodeVersion: process.version,
-  });
+app.listen(PORT, async () => {
+  try {
+    await initializeDatabase();
+    logger.info(`Server started successfully`, {
+      port: PORT,
+      environment: process.env.NODE_ENV || "development",
+      nodeVersion: process.version,
+    });
+  } catch (error) {
+    logger.error("Failed to initialize database:", error);
+    process.exit(1);
+  }
 });
