@@ -10,6 +10,7 @@ import {
   fetchAndStoreFloods,
   isCacheValid,
   processEarthquakeData,
+  initializeFloodCache,
 } from "./api";
 import { EarthquakeResponse } from "./types";
 
@@ -137,14 +138,20 @@ app.get(
     const timeRange = (req.query.timeRange as string) || "hour";
 
     try {
+      console.log(`[FLOODS] Incoming request for timeRange: ${timeRange}`);
+
       // Check cache validity in DB
       const cacheValid = await isCacheValid(timeRange);
-      
+      console.log(`[FLOODS] Cache valid: ${cacheValid}`);
+
       // Always fetch on first request or if cache invalid
       if (!cacheValid) {
+        console.log(`[FLOODS] Cache invalid, fetching from API`);
         await fetchAndStoreFloods(timeRange);
+      } else {
+        console.log(`[FLOODS] Cache valid, skipping fetch`);
       }
-      
+
       const floods = await getFloods(timeRange);
 
       res.json({
@@ -197,6 +204,7 @@ process.on("SIGINT", () => {
 app.listen(PORT, async () => {
   try {
     await initializeDatabase();
+    await initializeFloodCache();
     logger.info(`Server started successfully`, {
       port: PORT,
       environment: process.env.NODE_ENV || "development",

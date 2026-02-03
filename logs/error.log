@@ -116,3 +116,5 @@
 [2026-02-03T02:00:20.923Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"333ms"}
 [2026-02-03T02:00:22.696Z] [ERROR] Error fetching flood data for week: | {"error":"Duplicate entry 'flood_153' for key 'floods.PRIMARY'"}
 [2026-02-03T02:00:22.697Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"128ms"}
+[2026-02-03T02:27:17.722Z] [ERROR] Error fetching flood data for hour: | {"error":"Duplicate entry 'flood_153_hour' for key 'floods.PRIMARY'"}
+[2026-02-03T02:27:17.934Z] [ERROR] Error fetching flood data for hour: | {"error":"Duplicate entry 'flood_153_hour' for key 'floods.PRIMARY'"}
