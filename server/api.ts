@@ -6,6 +6,11 @@ import {
   ProcessedEarthquake,
 } from "./types";
 
+// In-memory cache for flood reference points
+let floodReferencePointsCache: any[] | null = null;
+let floodCacheTimestamp = 0;
+const FLOOD_CACHE_TTL = 3600000; // 1 hour in milliseconds
+
 // Earthquake
 export function processEarthquakeData(
   features: EarthquakeFeature[],
@@ -24,25 +29,71 @@ export function processEarthquakeData(
   });
 }
 
+// Fetch all flood reference points with pagination and caching
+async function getAllFloodReferencePoints(): Promise<any[]> {
+  const now = Date.now();
+
+  // Return cached data if valid
+  if (
+    floodReferencePointsCache &&
+    now - floodCacheTimestamp < FLOOD_CACHE_TTL
+  ) {
+    console.log("Using cached flood reference points");
+    return floodReferencePointsCache;
+  }
+
+  console.log("Fetching flood reference points from API");
+  let allFloods: any[] = [];
+  let skip = 0;
+  const limit = 10;
+  let hasMore = true;
+
+  while (hasMore) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+      const response = await axios.get(
+        `https://api.waterdata.usgs.gov/rtfi-api/referencepoints?skip=${skip}`,
+        {
+          signal: controller.signal as any,
+          headers: { "User-Agent": "EmergencySignalPlatform/1.0" },
+          timeout: 30000,
+        },
+      );
+
+      clearTimeout(timeoutId);
+
+      if (
+        !response.data ||
+        !Array.isArray(response.data) ||
+        response.data.length === 0
+      ) {
+        hasMore = false;
+      } else {
+        allFloods = allFloods.concat(response.data);
+        skip += limit;
+      }
+    } catch (error) {
+      hasMore = false;
+      console.error(`Error fetching page at skip=${skip}:`, error);
+    }
+  }
+
+  // Cache the results
+  floodReferencePointsCache = allFloods;
+  floodCacheTimestamp = now;
+  console.log(`Cached ${allFloods.length} flood reference points`);
+
+  return allFloods;
+}
+
 // Floods
 export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
-    const response = await axios.get(
-      "https://api.waterdata.usgs.gov/rtfi-api/referencepoints",
-      {
-        signal: controller.signal as any,
-        headers: { "User-Agent": "EmergencySignalPlatform/1.0" },
-      },
-    );
-    clearTimeout(timeoutId);
-    if (!response.data || !Array.isArray(response.data)) {
-      throw new Error("Invalid response format from USGS RTFI API");
-    }
-    
-    // Determine items to include and time range
-    let itemLimit: number;
+    const allFloods = await getAllFloodReferencePoints();
+    console.log(`getAllFloodReferencePoints returned ${allFloods.length} items`);
+
     const now = Date.now();
     const timeRangeMs: Record<string, number> = {
       hour: 3600000,
@@ -52,29 +103,11 @@ export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
     };
     const rangeMs = timeRangeMs[timeRange] || timeRangeMs.hour;
 
-    switch (timeRange) {
-      case "hour":
-        itemLimit = 5;
-        break;
-      case "day":
-        itemLimit = 15;
-        break;
-      case "week":
-        itemLimit = 25;
-        break;
-      case "month":
-        itemLimit = Math.min(response.data.length, 50);
-        break;
-      default:
-        itemLimit = 5;
-    }
-
-    // Map API data with timestamps within the requested range
-    let floods = response.data.slice(0, itemLimit).map((flood: any, index: number) => {
-      // Generate timestamp spread throughout the time range
+    // Map ALL API data with timestamps within the requested range
+    let floods = allFloods.map((flood: any) => {
       const randomOffset = Math.random() * rangeMs;
       const timestamp = now - randomOffset;
-      
+
       return {
         id: `flood_${flood.id}_${timeRange}`,
         timestamp,
@@ -86,8 +119,8 @@ export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
         time_range: timeRange,
       };
     });
-    
-    console.log(`Fetched ${floods.length} floods for ${timeRange}`);
+
+    console.log(`Mapped ${floods.length} floods for ${timeRange}`);
     await storeFloods(floods, timeRange);
   } catch (error) {
     console.error("Error fetching flood data:", error);
@@ -120,6 +153,7 @@ export async function storeFloods(
         `INSERT INTO floods (id, timestamp, longitude, latitude, severity, area_affected, source, time_range) VALUES ?`,
         [values],
       );
+      console.log(`Stored ${floods.length} floods for ${timeRange} to database`);
     }
     await connection.query(
       `INSERT INTO cache_metadata (cache_key, record_count) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_updated = CURRENT_TIMESTAMP, record_count = ?`,
@@ -139,6 +173,7 @@ export async function getFloods(timeRange: string): Promise<any[]> {
     "SELECT id, timestamp, longitude, latitude, severity, area_affected, source FROM floods WHERE time_range = ? ORDER BY severity DESC",
     [timeRange],
   );
+  console.log(`Retrieved ${rows.length} floods for ${timeRange} from database`);
   return rows as any[];
 }
 

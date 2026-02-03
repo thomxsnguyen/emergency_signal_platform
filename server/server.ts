@@ -135,17 +135,17 @@ app.get(
   validateTimeRange,
   async (req: Request, res: Response) => {
     const timeRange = (req.query.timeRange as string) || "hour";
-    const cacheKey = `floods_${timeRange}`;
 
     try {
       // Check cache validity in DB
       const cacheValid = await isCacheValid(timeRange);
-      let floods;
+      
+      // Always fetch on first request or if cache invalid
       if (!cacheValid) {
-        // Fetch and store new flood data
         await fetchAndStoreFloods(timeRange);
       }
-      floods = await getFloods(timeRange);
+      
+      const floods = await getFloods(timeRange);
 
       res.json({
         floods,
