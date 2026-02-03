@@ -10,6 +10,8 @@ import {
   isCacheValid,
   initializeDatabase,
 } from "./database";
+import { processEarthquakeData } from "./api";
+import { EarthquakeResponse } from "./types";
 
 // Load environment variables
 dotenv.config();
@@ -39,51 +41,6 @@ const TIME_RANGE_CONFIG: Record<string, string> = {
   week: "all_week.geojson",
   month: "all_month.geojson",
 } as const;
-
-// Type definitions
-interface EarthquakeFeature {
-  id: string;
-  properties: {
-    time: number;
-    mag: number;
-    place: string;
-  };
-  geometry: {
-    coordinates: [number, number, number];
-  };
-}
-
-interface EarthquakeResponse {
-  features: EarthquakeFeature[];
-}
-
-interface ProcessedEarthquake {
-  id: string;
-  timestamp: number;
-  longitude: number;
-  latitude: number;
-  depth: number;
-  magnitude: number;
-  place: string;
-}
-
-// Helper function to process earthquake data
-function processEarthquakeData(
-  features: EarthquakeFeature[],
-): ProcessedEarthquake[] {
-  return features.map((feature) => {
-    const [longitude, latitude, depth] = feature.geometry.coordinates;
-    return {
-      id: feature.id,
-      timestamp: feature.properties.time,
-      longitude,
-      latitude,
-      depth,
-      magnitude: feature.properties.mag,
-      place: feature.properties.place,
-    };
-  });
-}
 
 // Health check endpoint
 app.get("/api/health", (_req: Request, res: Response) => {
@@ -182,7 +139,7 @@ app.get(
 
     try {
       // Check cache validity in DB
-      const cacheValid = await isCacheValid(cacheKey);
+      const cacheValid = await isCacheValid(timeRange);
       let floods;
       if (!cacheValid) {
         // Fetch and store new flood data

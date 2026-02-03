@@ -80,3 +80,29 @@
 [2026-02-03T01:28:09.614Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"368ms"}
 [2026-02-03T01:28:18.044Z] [ERROR] Error fetching flood data for hour: | {"error":"Unknown column 'NaN' in 'field list'"}
 [2026-02-03T01:28:18.044Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"584ms"}
+[2026-02-03T01:35:36.580Z] [ERROR] Error fetching flood data for hour: | {"error":"Request failed with status code 404"}
+[2026-02-03T01:35:36.580Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"310ms"}
+[2026-02-03T01:35:36.672Z] [ERROR] Error fetching flood data for hour: | {"error":"Request failed with status code 404"}
+[2026-02-03T01:35:36.673Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"92ms"}
+[2026-02-03T01:35:37.422Z] [ERROR] Error fetching flood data for hour: | {"error":"Request failed with status code 404"}
+[2026-02-03T01:35:37.422Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"95ms"}
+[2026-02-03T01:35:38.195Z] [ERROR] Error fetching flood data for hour: | {"error":"Request failed with status code 404"}
+[2026-02-03T01:35:38.196Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"86ms"}
+[2026-02-03T01:36:10.631Z] [ERROR] Error fetching flood data for hour: | {"error":"Request failed with status code 404"}
+[2026-02-03T01:36:10.632Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"361ms"}
+[2026-02-03T01:36:10.932Z] [ERROR] Error fetching flood data for hour: | {"error":"Request failed with status code 404"}
+[2026-02-03T01:36:10.932Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"299ms"}
+[2026-02-03T01:36:11.594Z] [ERROR] Error fetching flood data for hour: | {"error":"Request failed with status code 404"}
+[2026-02-03T01:36:11.596Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"108ms"}
+[2026-02-03T01:37:59.916Z] [ERROR] Error fetching flood data for hour: | {"error":"Request failed with status code 404"}
+[2026-02-03T01:37:59.916Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"430ms"}
+[2026-02-03T01:38:33.881Z] [ERROR] Error fetching flood data for day: | {"error":"Duplicate entry 'flood_001' for key 'floods.PRIMARY'"}
+[2026-02-03T01:38:33.881Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"4ms"}
+[2026-02-03T01:38:41.741Z] [ERROR] Error fetching flood data for week: | {"error":"Duplicate entry 'flood_001' for key 'floods.PRIMARY'"}
+[2026-02-03T01:38:41.741Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"3ms"}
+[2026-02-03T01:38:43.680Z] [ERROR] Error fetching flood data for month: | {"error":"Duplicate entry 'flood_001' for key 'floods.PRIMARY'"}
+[2026-02-03T01:38:43.680Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"2ms"}
+[2026-02-03T01:38:46.546Z] [ERROR] Error fetching flood data for day: | {"error":"Duplicate entry 'flood_001' for key 'floods.PRIMARY'"}
+[2026-02-03T01:38:46.546Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"3ms"}
+[2026-02-03T01:38:47.404Z] [ERROR] Error fetching flood data for day: | {"error":"Duplicate entry 'flood_001' for key 'floods.PRIMARY'"}
+[2026-02-03T01:38:47.405Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":500,"duration":"7ms"}
