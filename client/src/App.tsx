@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import EarthquakeMap from "./components/EarthquakeMap";
+import FloodMap from "./components/FloodMap";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 // Constants
@@ -23,8 +24,19 @@ interface Earthquake {
   place: string;
 }
 
+interface Flood {
+  id: string;
+  timestamp: number;
+  longitude: number;
+  latitude: number;
+  severity: string;
+  area_affected: string;
+  source: string;
+}
+
 interface ApiResponse {
-  earthquakes: Earthquake[];
+  earthquakes?: Earthquake[];
+  floods?: Flood[];
   count: number;
   cached?: boolean;
   source?: string;
@@ -33,7 +45,8 @@ interface ApiResponse {
 interface FetchState {
   loading: boolean;
   error: string | null;
-  data: Earthquake[];
+  earthquakes: Earthquake[];
+  floods: Flood[];
 }
 
 function App() {
@@ -41,44 +54,64 @@ function App() {
   const [fetchState, setFetchState] = useState<FetchState>({
     loading: false,
     error: null,
-    data: [],
+    earthquakes: [],
+    floods: [],
   });
+  const [activeTab, setActiveTab] = useState<"earthquakes" | "floods">("earthquakes");
 
-  const fetchEarthquakes = useCallback(async (range: string) => {
+  const fetchData = useCallback(async (range: string) => {
     setFetchState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+      // Fetch earthquakes
+      const eqController = new AbortController();
+      const eqTimeoutId = setTimeout(() => eqController.abort(), 10000);
 
-      const response = await fetch(
+      const eqResponse = await fetch(
         `${API_BASE_URL}/api/earthquakes?timeRange=${range}`,
         {
-          signal: controller.signal,
-          headers: {
-            "Content-Type": "application/json",
-          },
+          signal: eqController.signal,
+          headers: { "Content-Type": "application/json" },
         }
       );
 
-      clearTimeout(timeoutId);
+      clearTimeout(eqTimeoutId);
 
-      if (!response.ok) {
+      if (!eqResponse.ok) {
         throw new Error(
-          `Server responded with ${response.status}: ${response.statusText}`
+          `Server responded with ${eqResponse.status}: ${eqResponse.statusText}`
         );
       }
 
-      const data: ApiResponse = await response.json();
+      const eqData: ApiResponse = await eqResponse.json();
 
-      if (!data.earthquakes || !Array.isArray(data.earthquakes)) {
-        throw new Error("Invalid response format from server");
+      // Fetch floods
+      const floodController = new AbortController();
+      const floodTimeoutId = setTimeout(() => floodController.abort(), 10000);
+
+      const floodResponse = await fetch(
+        `${API_BASE_URL}/api/floods?timeRange=${range}`,
+        {
+          signal: floodController.signal,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      clearTimeout(floodTimeoutId);
+
+      if (!floodResponse.ok) {
+        throw new Error(
+          `Server responded with ${floodResponse.status}: ${floodResponse.statusText}`
+        );
       }
+
+      const floodData: ApiResponse = await floodResponse.json();
 
       setFetchState({
         loading: false,
         error: null,
-        data: data.earthquakes,
+        earthquakes: eqData.earthquakes || [],
+        floods: floodData.floods || [],
       });
     } catch (err) {
       const errorMessage =
@@ -91,25 +124,26 @@ function App() {
       setFetchState({
         loading: false,
         error: errorMessage,
-        data: [],
+        earthquakes: [],
+        floods: [],
       });
 
-      console.error("Error fetching earthquake data:", err);
+      console.error("Error fetching data:", err);
     }
   }, []);
 
   useEffect(() => {
-    fetchEarthquakes(timeRange);
-  }, [timeRange, fetchEarthquakes]);
+    fetchData(timeRange);
+  }, [timeRange, fetchData]);
 
   const handleTimeRangeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setTimeRange(event.target.value);
   };
 
   const handleRetry = () => {
-    fetchEarthquakes(timeRange);
+    fetchData(timeRange);
   };
 
   return (
@@ -154,6 +188,20 @@ function App() {
               </option>
             ))}
           </select>
+          <div className="tabs">
+            <button
+              className={`tab ${activeTab === "earthquakes" ? "active" : ""}`}
+              onClick={() => setActiveTab("earthquakes")}
+            >
+              Earthquakes ({fetchState.earthquakes.length})
+            </button>
+            <button
+              className={`tab ${activeTab === "floods" ? "active" : ""}`}
+              onClick={() => setActiveTab("floods")}
+            >
+              Floods ({fetchState.floods.length})
+            </button>
+          </div>
         </div>
 
         {fetchState.loading && (
@@ -179,24 +227,47 @@ function App() {
               <div className="alert-content">
                 <strong>Emergency Alert System</strong>
                 <p>
-                  Displaying real-time seismic activity. Check for updates
+                  Displaying real-time disaster monitoring data. Check for updates
                   regularly.
                 </p>
               </div>
             </div>
             <div className="stats">
-              <div className="stat-card">
-                <div className="stat-value">{fetchState.data.length}</div>
-                <div className="stat-label">Earthquakes Detected</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-value">
-                  {TIME_RANGES.find((r) => r.value === timeRange)?.label}
-                </div>
-                <div className="stat-label">Time Period</div>
-              </div>
+              {activeTab === "earthquakes" && (
+                <>
+                  <div className="stat-card">
+                    <div className="stat-value">{fetchState.earthquakes.length}</div>
+                    <div className="stat-label">Earthquakes Detected</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-value">
+                      {TIME_RANGES.find((r) => r.value === timeRange)?.label}
+                    </div>
+                    <div className="stat-label">Time Period</div>
+                  </div>
+                </>
+              )}
+              {activeTab === "floods" && (
+                <>
+                  <div className="stat-card">
+                    <div className="stat-value">{fetchState.floods.length}</div>
+                    <div className="stat-label">Flood Events Detected</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-value">
+                      {TIME_RANGES.find((r) => r.value === timeRange)?.label}
+                    </div>
+                    <div className="stat-label">Time Period</div>
+                  </div>
+                </>
+              )}
             </div>
-            <EarthquakeMap earthquakes={fetchState.data} />
+            {activeTab === "earthquakes" && (
+              <EarthquakeMap earthquakes={fetchState.earthquakes} />
+            )}
+            {activeTab === "floods" && (
+              <FloodMap floods={fetchState.floods} />
+            )}
           </div>
         )}
         <footer className="app-footer">

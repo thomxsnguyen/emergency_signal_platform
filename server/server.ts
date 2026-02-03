@@ -1,51 +1,10 @@
-import { getFloods, fetchAndStoreFloods, isCacheValid } from "./database";
-// Flood data endpoint
-app.get(
-  "/api/floods",
-  validateTimeRange,
-  async (req: Request, res: Response) => {
-    const timeRange = (req.query.timeRange as string) || "hour";
-    const cacheKey = `floods_${timeRange}`;
-
-    try {
-      // Check cache validity in DB
-      const cacheValid = await isCacheValid(cacheKey);
-      let floods;
-      if (!cacheValid) {
-        // Fetch and store new flood data
-        await fetchAndStoreFloods(timeRange);
-      }
-      floods = await getFloods(timeRange);
-
-      res.json({
-        floods,
-        count: floods.length,
-        timeRange,
-        cached: cacheValid,
-        source: cacheValid ? "db-cache" : "usgs-api",
-        fetchedAt: new Date().toISOString(),
-      });
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-      logger.error(`Error fetching flood data for ${timeRange}:`, {
-        error: errorMessage,
-      });
-      res.status(500).json({
-        error: "Failed to fetch flood data",
-        message:
-          process.env.NODE_ENV === "development" ? errorMessage : undefined,
-        timeRange,
-      });
-    }
-  },
-);
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { getFromCache, setCache } from "./cache";
 import { logger, requestLogger, errorLogger } from "./logger";
 import { validateTimeRange, rateLimit } from "./middleware";
+import { getFloods, fetchAndStoreFloods, isCacheValid } from "./database";
 
 // Load environment variables
 dotenv.config();
@@ -194,6 +153,48 @@ app.get(
 
       res.status(500).json({
         error: "Failed to fetch earthquake data",
+        message:
+          process.env.NODE_ENV === "development" ? errorMessage : undefined,
+        timeRange,
+      });
+    }
+  },
+);
+
+// Flood data endpoint
+app.get(
+  "/api/floods",
+  validateTimeRange,
+  async (req: Request, res: Response) => {
+    const timeRange = (req.query.timeRange as string) || "hour";
+    const cacheKey = `floods_${timeRange}`;
+
+    try {
+      // Check cache validity in DB
+      const cacheValid = await isCacheValid(cacheKey);
+      let floods;
+      if (!cacheValid) {
+        // Fetch and store new flood data
+        await fetchAndStoreFloods(timeRange);
+      }
+      floods = await getFloods(timeRange);
+
+      res.json({
+        floods,
+        count: floods.length,
+        timeRange,
+        cached: cacheValid,
+        source: cacheValid ? "db-cache" : "usgs-api",
+        fetchedAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      logger.error(`Error fetching flood data for ${timeRange}:`, {
+        error: errorMessage,
+      });
+      res.status(500).json({
+        error: "Failed to fetch flood data",
         message:
           process.env.NODE_ENV === "development" ? errorMessage : undefined,
         timeRange,

@@ -1,0 +1,3 @@
+[2026-02-03T00:31:41.717Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":404,"duration":"0ms"}
+[2026-02-03T00:31:41.717Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":404,"duration":"0ms"}
+[2026-02-03T00:31:43.594Z] [ERROR] Request completed | {"method":"GET","path":"/api/floods","statusCode":404,"duration":"1ms"}
