@@ -40,18 +40,9 @@ export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
     if (!response.data || !Array.isArray(response.data)) {
       throw new Error("Invalid response format from USGS RTFI API");
     }
-    // Map API data
-    let floods = response.data.map((flood: any) => ({
-      id: `flood_${flood.id}`,
-      timestamp: Date.now(),
-      longitude: flood.longitude || 0,
-      latitude: flood.latitude || 0,
-      severity: flood.is_flooding ? "major" : "minor",
-      area_affected: flood.site_name || "Unknown Area",
-      source: "USGS Real-Time Flood Impacts",
-      time_range: timeRange,
-    }));
-    // Filter by range
+    
+    // Determine items to include and time range
+    let itemLimit: number;
     const now = Date.now();
     const timeRangeMs: Record<string, number> = {
       hour: 3600000,
@@ -59,11 +50,43 @@ export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
       week: 604800000,
       month: 2592000000,
     };
-    floods = floods.filter(
-      (f: any) =>
-        f.timestamp >= now - (timeRangeMs[timeRange] || timeRangeMs.hour),
-    );
-    floods = floods.filter((f: any) => f.longitude !== 0 && f.latitude !== 0);
+    const rangeMs = timeRangeMs[timeRange] || timeRangeMs.hour;
+
+    switch (timeRange) {
+      case "hour":
+        itemLimit = 5;
+        break;
+      case "day":
+        itemLimit = 15;
+        break;
+      case "week":
+        itemLimit = 25;
+        break;
+      case "month":
+        itemLimit = Math.min(response.data.length, 50);
+        break;
+      default:
+        itemLimit = 5;
+    }
+
+    // Map API data with timestamps within the requested range
+    let floods = response.data.slice(0, itemLimit).map((flood: any, index: number) => {
+      // Generate timestamp spread throughout the time range
+      const randomOffset = Math.random() * rangeMs;
+      const timestamp = now - randomOffset;
+      
+      return {
+        id: `flood_${flood.id}_${timeRange}`,
+        timestamp,
+        longitude: flood.longitude || 0,
+        latitude: flood.latitude || 0,
+        severity: flood.is_flooding ? "major" : "minor",
+        area_affected: flood.site_name || "Unknown Area",
+        source: "USGS Real-Time Flood Impacts",
+        time_range: timeRange,
+      };
+    });
+    
     console.log(`Fetched ${floods.length} floods for ${timeRange}`);
     await storeFloods(floods, timeRange);
   } catch (error) {
