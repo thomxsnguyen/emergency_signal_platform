@@ -1,3 +1,96 @@
+import axios from "axios";
+// Fetch and store flood data from USGS Continuous Values API
+export async function fetchAndStoreFloods(timeRange: string): Promise<void> {
+  const apiUrl = "https://api.waterdata.usgs.gov/ogcapi/v0/collections/continuous/items";
+  try {
+    // Example: fetch recent water level data (customize query as needed)
+    const response = await axios.get(apiUrl, {
+      params: {
+        // You can filter by time, location, etc. For demo, fetch recent data
+        limit: 100,
+      },
+    });
+    const items = response.data.features || [];
+
+    // Map API data to flood table schema
+    const floods = items.map((item: any) => ({
+      id: item.id,
+      timestamp: new Date(item.properties.resultTime || item.properties.observed).getTime(),
+      longitude: item.geometry?.coordinates[0] || 0,
+      latitude: item.geometry?.coordinates[1] || 0,
+      severity: item.properties.parameter || "unknown",
+      area_affected: item.properties.siteName || "unknown",
+      source: "USGS Continuous Values API",
+      time_range: timeRange,
+    }));
+
+    await storeFloods(floods, timeRange);
+  } catch (error) {
+    console.error("Error fetching flood data:", error);
+    throw error;
+  }
+}
+
+// Store floods in database
+export async function storeFloods(floods: any[], timeRange: string): Promise<void> {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    // Delete old data for this time range
+    await connection.query("DELETE FROM floods WHERE time_range = ?", [timeRange]);
+
+    // Insert new data
+    if (floods.length > 0) {
+      const values = floods.map((f) => [
+        f.id,
+        f.timestamp,
+        f.longitude,
+        f.latitude,
+        f.severity,
+        f.area_affected,
+        f.source,
+        timeRange,
+      ]);
+
+      await connection.query(
+        `INSERT INTO floods 
+         (id, timestamp, longitude, latitude, severity, area_affected, source, time_range) 
+         VALUES ?`,
+        [values]
+      );
+    }
+
+    // Update cache metadata
+    await connection.query(
+      `INSERT INTO cache_metadata (cache_key, record_count) 
+       VALUES (?, ?) 
+       ON DUPLICATE KEY UPDATE 
+       last_updated = CURRENT_TIMESTAMP, 
+       record_count = ?`,
+      [timeRange, floods.length, floods.length]
+    );
+
+    await connection.commit();
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+}
+
+// Retrieve floods from database
+export async function getFloods(timeRange: string): Promise<any[]> {
+  const [rows] = await pool.query(
+    `SELECT id, timestamp, longitude, latitude, severity, area_affected, source 
+     FROM floods 
+     WHERE time_range = ? 
+     ORDER BY severity DESC`,
+    [timeRange]
+  );
+  return rows as any[];
+}
 import mysql from "mysql2/promise";
 
 // Database configuration
