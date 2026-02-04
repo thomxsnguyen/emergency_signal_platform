@@ -4,6 +4,7 @@ import EarthquakeMap from "./components/EarthquakeMap";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Login from "./Login";
 import FirebaseLogin from "./FirebaseLogin";
+import Logout from "./Logout";
 
 // Constants
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
@@ -107,6 +108,10 @@ function App() {
     fetchData(timeRange);
   };
 
+  const handleLogout = () => {
+    setToken(null);
+  };
+
   const handleTimeRangeChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
@@ -142,6 +147,9 @@ function App() {
               <p className="subtitle">
                 Real-Time Disaster Monitoring & Notification System
               </p>
+            </div>
+            <div className="header-actions">
+              <Logout onLogout={handleLogout} />
             </div>
           </div>
         </header>

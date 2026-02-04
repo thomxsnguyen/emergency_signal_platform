@@ -917,3 +917,18 @@
 [2026-02-04T02:48:38.632Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
 [2026-02-04T02:48:38.632Z] [INFO] Cache hit for time range: hour
 [2026-02-04T02:48:38.633Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"1ms"}
+[2026-02-04T02:49:57.205Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-04T02:49:57.206Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-04T02:49:57.205Z] [INFO] Cache hit for time range: hour
+[2026-02-04T02:49:57.205Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":304,"duration":"0ms"}
+[2026-02-04T02:49:57.207Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":304,"duration":"1ms"}
+[2026-02-04T02:49:57.206Z] [INFO] Cache hit for time range: hour
+[2026-02-04T02:50:18.718Z] [INFO] Cache hit for time range: hour
+[2026-02-04T02:50:18.718Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-04T02:50:18.719Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":304,"duration":"1ms"}
+[2026-02-04T02:50:20.968Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-04T02:50:20.968Z] [INFO] Cache hit for time range: hour
+[2026-02-04T02:50:20.968Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":304,"duration":"0ms"}
+[2026-02-04T02:50:24.878Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-04T02:50:24.878Z] [INFO] Cache hit for time range: hour
+[2026-02-04T02:50:24.878Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":304,"duration":"0ms"}

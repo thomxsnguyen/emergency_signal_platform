@@ -42,6 +42,7 @@
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .header-seal {
@@ -93,6 +94,37 @@
   font-size: 0.95rem;
   color: #dfe1e2;
   font-weight: 400;
+}
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.logout-button {
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.logout-button:active {
+  transform: translateY(0);
 }
 
 /* Controls */
@@ -364,6 +396,15 @@
     flex-direction: column;
     text-align: center;
     padding: 1.5rem;
+  }
+
+  .header-actions {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .logout-button {
+    width: 100%;
   }
 
   .app-header h1 {
