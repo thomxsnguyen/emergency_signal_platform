@@ -54,7 +54,8 @@ export async function initializeDatabase() {
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(255) NOT NULL UNIQUE,
-        password_hash VARCHAR(255) NOT NULL,
+        password_hash VARCHAR(255),
+        firebase_uid VARCHAR(255),
         roles VARCHAR(255) DEFAULT 'user',
         is_verified BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

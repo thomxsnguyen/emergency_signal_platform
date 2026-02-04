@@ -1,7 +1,9 @@
 import express from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { pool } from "./database";
+import { getOrCreateUser } from "./firebase";
+import admin from "firebase-admin";
 
 const router = express.Router();
 
@@ -16,7 +18,7 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error: "Email and password required" });
     }
 
-    const password_hash = await bcrypt.hash(password, 10);
+    const password_hash = bcrypt.hashSync(password, 10);
 
     const connection = await pool.getConnection();
     try {
@@ -56,7 +58,7 @@ router.post("/login", async (req, res) => {
     }
 
     const user = rows[0];
-    const match = await bcrypt.compare(password, user.password_hash);
+    const match = bcrypt.compareSync(password, user.password_hash);
     if (!match) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
@@ -96,6 +98,49 @@ router.get("/me", async (req, res) => {
     return res.json({ user: rows[0] });
   } catch (error: any) {
     return res.status(401).json({ error: "Invalid token" });
+  }
+});
+
+// Firebase Login
+router.post("/firebase-login", async (req, res) => {
+  try {
+    const { idToken } = req.body;
+    if (!idToken) {
+      return res.status(400).json({ error: "ID token required" });
+    }
+
+    if (!admin.apps.length) {
+      return res.status(500).json({ error: "Firebase not initialized" });
+    }
+
+    // Verify Firebase token
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+
+    // Get or create user in DB
+    const dbUser = await getOrCreateUser(decodedToken);
+
+    // Generate JWT for client
+    const token = jwt.sign(
+      { sub: dbUser.id, email: decodedToken.email },
+      JWT_SECRET,
+      {
+        expiresIn: TOKEN_EXPIRY,
+      },
+    );
+
+    // Update last_login
+    await pool.query(
+      `UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?`,
+      [dbUser.id],
+    );
+
+    return res.json({
+      token,
+      user: { id: dbUser.id, email: decodedToken.email },
+    });
+  } catch (error: any) {
+    console.error("Firebase login error:", error);
+    return res.status(401).json({ error: "Firebase authentication failed" });
   }
 });
 

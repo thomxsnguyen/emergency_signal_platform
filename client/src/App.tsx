@@ -3,6 +3,7 @@ import "./App.css";
 import EarthquakeMap from "./components/EarthquakeMap";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Login from "./Login";
+import FirebaseLogin from "./FirebaseLogin";
 
 // Constants
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
@@ -117,7 +118,7 @@ function App() {
   };
 
   if (!token) {
-    return <Login onLogin={handleLogin} />;
+    return <FirebaseLogin onLogin={handleLogin} />;
   }
 
   return (
