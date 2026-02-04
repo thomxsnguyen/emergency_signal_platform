@@ -1,6 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import { getFromCache, setCache } from "./cache";
 import { logger, requestLogger, errorLogger } from "./logger";
 import { validateTimeRange, rateLimit } from "./middleware";
@@ -9,8 +11,11 @@ import { processEarthquakeData } from "./api";
 import { EarthquakeResponse } from "./types";
 import authRouter from "./auth";
 
-// Load environment variables
-dotenv.config();
+// Load environment variables - server/.env takes priority
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config(); // Load server/.env first (current directory)
+dotenv.config({ path: path.resolve(__dirname, "..", ".env") }); // Also load root .env for Firebase config
 
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001;

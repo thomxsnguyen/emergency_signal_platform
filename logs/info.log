@@ -892,3 +892,28 @@
 [2026-02-04T02:32:48.158Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
 [2026-02-04T02:34:37.487Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
 [2026-02-04T02:36:33.689Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:41:14.372Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:41:19.740Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:41:20.651Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:41:39.167Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:41:46.402Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:42:20.438Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:42:58.119Z] [INFO] Server started successfully | {"port":3001,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:43:07.892Z] [INFO] Server started successfully | {"port":3002,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:44:04.587Z] [INFO] Server started successfully | {"port":3002,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:44:11.418Z] [INFO] Server started successfully | {"port":3002,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:44:23.396Z] [INFO] Incoming request | {"method":"POST","path":"/auth/firebase-login","query":{},"ip":"::1"}
+[2026-02-04T02:45:42.412Z] [INFO] Server started successfully | {"port":3002,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:46:14.236Z] [INFO] Server started successfully | {"port":3002,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:46:19.071Z] [INFO] Server started successfully | {"port":3002,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:47:09.293Z] [INFO] Server started successfully | {"port":3002,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:48:31.206Z] [INFO] Server started successfully | {"port":3002,"environment":"development","nodeVersion":"v22.11.0"}
+[2026-02-04T02:48:38.194Z] [INFO] Incoming request | {"method":"POST","path":"/auth/firebase-login","query":{},"ip":"::1"}
+[2026-02-04T02:48:38.381Z] [INFO] Request completed | {"method":"POST","path":"/firebase-login","statusCode":200,"duration":"187ms"}
+[2026-02-04T02:48:38.385Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-04T02:48:38.385Z] [INFO] Cache miss for hour, fetching from USGS API
+[2026-02-04T02:48:38.630Z] [INFO] Cached 8 earthquakes for hour
+[2026-02-04T02:48:38.631Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"246ms"}
+[2026-02-04T02:48:38.632Z] [INFO] Incoming request | {"method":"GET","path":"/api/earthquakes","query":{"timeRange":"hour"},"ip":"::1"}
+[2026-02-04T02:48:38.632Z] [INFO] Cache hit for time range: hour
+[2026-02-04T02:48:38.633Z] [INFO] Request completed | {"method":"GET","path":"/api/earthquakes","statusCode":200,"duration":"1ms"}

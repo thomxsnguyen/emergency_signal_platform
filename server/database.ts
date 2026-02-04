@@ -63,6 +63,20 @@ export async function initializeDatabase() {
       )
     `);
 
+    // Ensure `firebase_uid` column exists for existing databases created before migration
+    // MySQL doesn't support ALTER ... ADD COLUMN IF NOT EXISTS reliably across versions,
+    // so check INFORMATION_SCHEMA and add the column only if missing.
+    const [cols]: any = await connection.query(
+      `SELECT COUNT(*) as cnt FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'users' AND COLUMN_NAME = 'firebase_uid'`,
+      [dbConfig.database],
+    );
+    const exists = cols && cols[0] && cols[0].cnt > 0;
+    if (!exists) {
+      await connection.query(
+        `ALTER TABLE users ADD COLUMN firebase_uid VARCHAR(255)`,
+      );
+    }
+
     connection.release();
     console.log("Database initialized successfully");
   } catch (error) {

@@ -8,7 +8,7 @@ import {
   type User,
 } from "firebase/auth";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3002";
 
 // Firebase config - REPLACE with your Firebase project credentials
 const firebaseConfig = {
