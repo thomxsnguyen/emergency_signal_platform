@@ -130,23 +130,27 @@ function App() {
     <ErrorBoundary>
       <div className="app-container">
         <header className="app-header">
-          <div className="official-banner">
-            <p className="banner-text">
-              An official website of the United States government
-            </p>
-          </div>
           <div className="header-content">
-            <div className="header-seal">
-              <div className="seal-circle">
-                <span className="seal-text">USGS</span>
+            <div className="header-logo">
+              <svg
+                className="logo-icon"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
+                <path
+                  d="M10 20 Q 20 10, 30 20 Q 20 30, 10 20"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  fill="none"
+                />
+                <circle cx="20" cy="20" r="3" fill="currentColor" />
+              </svg>
+              <div className="logo-text-group">
+                <h1>Faultline</h1>
+                <span className="logo-tagline">Real-time Monitoring</span>
               </div>
-            </div>
-            <div className="header-titles">
-              <h1>U.S. Geological Survey</h1>
-              <h2 className="system-title">Emergency Hazards Program</h2>
-              <p className="subtitle">
-                Real-Time Disaster Monitoring & Notification System
-              </p>
             </div>
             <div className="header-actions">
               <Logout onLogout={handleLogout} />
@@ -155,26 +159,29 @@ function App() {
         </header>
 
         <div className="controls">
-          <label htmlFor="time-range" className="time-range-label">
-            Select Time Range:
-          </label>
-          <select
-            id="time-range"
-            value={timeRange}
-            onChange={handleTimeRangeChange}
-            disabled={fetchState.loading}
-            className="time-range-select"
-          >
-            {TIME_RANGES.map((range) => (
-              <option key={range.value} value={range.value}>
-                {range.label}
-              </option>
-            ))}
-          </select>
-          <div className="tabs">
-            <h3 className="tab-title">
-              Earthquakes ({fetchState.earthquakes.length})
-            </h3>
+          <div className="controls-wrapper">
+            <div className="time-range-group">
+              <label htmlFor="time-range" className="time-range-label">
+                Time Range:
+              </label>
+              <select
+                id="time-range"
+                value={timeRange}
+                onChange={handleTimeRangeChange}
+                disabled={fetchState.loading}
+                className="time-range-select"
+              >
+                {TIME_RANGES.map((range) => (
+                  <option key={range.value} value={range.value}>
+                    {range.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="earthquake-count">
+              <span className="count-label">Earthquakes:</span>
+              <span className="count-value">{fetchState.earthquakes.length}</span>
+            </div>
           </div>
         </div>
 
@@ -196,45 +203,15 @@ function App() {
 
         {!fetchState.loading && !fetchState.error && (
           <div className="content">
-            <div className="alert-box">
-              <div className="alert-icon">⚠️</div>
-              <div className="alert-content">
-                <strong>Emergency Alert System</strong>
-                <p>
-                  Displaying real-time disaster monitoring data. Check for
-                  updates regularly.
-                </p>
-              </div>
+            <div className="map-container">
+              <EarthquakeMap earthquakes={fetchState.earthquakes} />
             </div>
-            <div className="stats">
-              <div className="stat-card">
-                <div className="stat-value">
-                  {fetchState.earthquakes.length}
-                </div>
-                <div className="stat-label">Earthquakes Detected</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-value">
-                  {TIME_RANGES.find((r) => r.value === timeRange)?.label}
-                </div>
-                <div className="stat-label">Time Period</div>
-              </div>
-            </div>
-            <EarthquakeMap earthquakes={fetchState.earthquakes} />
           </div>
         )}
+
         <footer className="app-footer">
           <div className="footer-content">
-            <p>
-              &copy; {new Date().getFullYear()} U.S. Geological Survey |
-              Department of the Interior
-            </p>
-            <div className="footer-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Accessibility</a>
-              <a href="#">FOIA</a>
-              <a href="#">Contact Us</a>
-            </div>
+            <p>&copy; {new Date().getFullYear()} Faultline | Earthquake Monitoring System</p>
           </div>
         </footer>
       </div>
