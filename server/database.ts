@@ -1,4 +1,3 @@
-import axios from "axios";
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 
@@ -50,20 +49,16 @@ export async function initializeDatabase() {
       )
     `);
 
+    // Users table for authentication
     await connection.query(`
-      CREATE TABLE IF NOT EXISTS floods (
-        id VARCHAR(255) PRIMARY KEY,
-        timestamp BIGINT NOT NULL,
-        longitude DECIMAL(10, 6) NOT NULL,
-        latitude DECIMAL(10, 6) NOT NULL,
-        severity VARCHAR(50),
-        area_affected VARCHAR(255),
-        source VARCHAR(255),
-        time_range VARCHAR(50),
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        password_hash VARCHAR(255) NOT NULL,
+        roles VARCHAR(255) DEFAULT 'user',
+        is_verified BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        INDEX idx_timestamp (timestamp),
-        INDEX idx_time_range (time_range),
-        INDEX idx_severity (severity)
+        last_login TIMESTAMP NULL
       )
     `);
 

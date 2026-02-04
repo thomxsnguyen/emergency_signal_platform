@@ -5,14 +5,9 @@ import { getFromCache, setCache } from "./cache";
 import { logger, requestLogger, errorLogger } from "./logger";
 import { validateTimeRange, rateLimit } from "./middleware";
 import { initializeDatabase } from "./database";
-import {
-  getFloods,
-  fetchAndStoreFloods,
-  isCacheValid,
-  processEarthquakeData,
-  initializeFloodCache,
-} from "./api";
+import { processEarthquakeData } from "./api";
 import { EarthquakeResponse } from "./types";
+import authRouter from "./auth";
 
 // Load environment variables
 dotenv.config();
@@ -130,53 +125,8 @@ app.get(
   },
 );
 
-// Flood data endpoint
-app.get(
-  "/api/floods",
-  validateTimeRange,
-  async (req: Request, res: Response) => {
-    const timeRange = (req.query.timeRange as string) || "hour";
-
-    try {
-      console.log(`[FLOODS] Incoming request for timeRange: ${timeRange}`);
-
-      // Check cache validity in DB
-      const cacheValid = await isCacheValid(timeRange);
-      console.log(`[FLOODS] Cache valid: ${cacheValid}`);
-
-      // Always fetch on first request or if cache invalid
-      if (!cacheValid) {
-        console.log(`[FLOODS] Cache invalid, fetching from API`);
-        await fetchAndStoreFloods(timeRange);
-      } else {
-        console.log(`[FLOODS] Cache valid, skipping fetch`);
-      }
-
-      const floods = await getFloods(timeRange);
-
-      res.json({
-        floods,
-        count: floods.length,
-        timeRange,
-        cached: cacheValid,
-        source: cacheValid ? "db-cache" : "usgs-api",
-        fetchedAt: new Date().toISOString(),
-      });
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-      logger.error(`Error fetching flood data for ${timeRange}:`, {
-        error: errorMessage,
-      });
-      res.status(500).json({
-        error: "Failed to fetch flood data",
-        message:
-          process.env.NODE_ENV === "development" ? errorMessage : undefined,
-        timeRange,
-      });
-    }
-  },
-);
+// Auth routes
+app.use("/auth", authRouter);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {
@@ -204,7 +154,6 @@ process.on("SIGINT", () => {
 app.listen(PORT, async () => {
   try {
     await initializeDatabase();
-    await initializeFloodCache();
     logger.info(`Server started successfully`, {
       port: PORT,
       environment: process.env.NODE_ENV || "development",
