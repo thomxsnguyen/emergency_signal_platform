@@ -38,7 +38,9 @@ interface FetchState {
 }
 
 function App() {
-  const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token"),
+  );
   const [timeRange, setTimeRange] = useState<string>("hour");
   const [fetchState, setFetchState] = useState<FetchState>({
     loading: false,
@@ -161,7 +163,9 @@ function App() {
             ))}
           </select>
           <div className="tabs">
-            <h3 className="tab-title">Earthquakes ({fetchState.earthquakes.length})</h3>
+            <h3 className="tab-title">
+              Earthquakes ({fetchState.earthquakes.length})
+            </h3>
           </div>
         </div>
 

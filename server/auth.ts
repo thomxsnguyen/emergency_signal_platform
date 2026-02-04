@@ -66,7 +66,10 @@ router.post("/login", async (req, res) => {
     });
 
     // Update last_login
-    await pool.query(`UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?`, [user.id]);
+    await pool.query(
+      `UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?`,
+      [user.id],
+    );
 
     return res.json({ token, user: { id: user.id, email: user.email } });
   } catch (error) {
@@ -84,8 +87,12 @@ router.get("/me", async (req, res) => {
     }
     const token = auth.slice("Bearer ".length);
     const payload: any = jwt.verify(token, JWT_SECRET);
-    const [rows]: any = await pool.query(`SELECT id, email FROM users WHERE id = ?`, [payload.sub]);
-    if (!rows || rows.length === 0) return res.status(404).json({ error: "User not found" });
+    const [rows]: any = await pool.query(
+      `SELECT id, email FROM users WHERE id = ?`,
+      [payload.sub],
+    );
+    if (!rows || rows.length === 0)
+      return res.status(404).json({ error: "User not found" });
     return res.json({ user: rows[0] });
   } catch (error: any) {
     return res.status(401).json({ error: "Invalid token" });

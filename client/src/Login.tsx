@@ -42,8 +42,14 @@ export default function Login({ onLogin }: Props) {
         <label>Email</label>
         <input value={email} onChange={(e) => setEmail(e.target.value)} />
         <label>Password</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type="submit" disabled={loading}>{loading ? "Signing in..." : "Sign in"}</button>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? "Signing in..." : "Sign in"}
+        </button>
       </form>
     </div>
   );
