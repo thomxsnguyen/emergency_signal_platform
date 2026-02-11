@@ -8,6 +8,7 @@ import Logout from "./Logout";
 
 // Constants
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const POLLING_INTERVAL = 60000; // Auto-refresh every 60 seconds for near real-time updates
 const TIME_RANGES = [
   { value: "hour", label: "Past Hour" },
   { value: "day", label: "Past Day" },
@@ -101,6 +102,18 @@ function App() {
   useEffect(() => {
     if (token) fetchData(timeRange);
   }, [timeRange, fetchData, token]);
+
+  // Auto-refresh polling for near real-time updates
+  useEffect(() => {
+    if (!token) return;
+
+    const intervalId = setInterval(() => {
+      console.log(`[AUTO-REFRESH] Polling for new earthquake data (${timeRange})`);
+      fetchData(timeRange);
+    }, POLLING_INTERVAL);
+
+    return () => clearInterval(intervalId);
+  }, [token, timeRange, fetchData]);
 
   const handleLogin = (t: string) => {
     setToken(t);
