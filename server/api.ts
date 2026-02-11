@@ -5,21 +5,28 @@ import {
   EarthquakeResponse,
   ProcessedEarthquake,
 } from "./types";
+import {
+  validateEarthquakeResponse,
+  validateAndFilterEarthquakes,
+} from "./validation";
+import { logger } from "./logger";
 
-// Earthquake API
+// Earthquake API with comprehensive validation
 export function processEarthquakeData(
   features: EarthquakeFeature[]
 ): ProcessedEarthquake[] {
   return features.map((feature) => {
     const [longitude, latitude, depth] = feature.geometry.coordinates;
+    
+    // Defensive parsing with null coalescing and sanitization
     return {
-      id: feature.id,
-      timestamp: feature.properties.time,
-      longitude,
-      latitude,
-      depth,
-      magnitude: feature.properties.mag,
-      place: feature.properties.place,
+      id: String(feature.id || `unknown-${Date.now()}`).trim(),
+      timestamp: Number(feature.properties.time) || Date.now(),
+      longitude: Number(longitude) || 0,
+      latitude: Number(latitude) || 0,
+      depth: depth !== null ? Number(depth) : 0,
+      magnitude: feature.properties.mag !== null ? Number(feature.properties.mag) : 0,
+      place: String(feature.properties.place || "Unknown location").trim().substring(0, 255),
     };
   });
 }
@@ -30,13 +37,41 @@ export async function fetchAndStoreEarthquakes(timeRange: string): Promise<void>
       `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_${timeRange}.geojson`
     );
 
-    const response: EarthquakeResponse = earthquakesResponse.data;
-    const processed = processEarthquakeData(response.features);
+    // Validate response structure before processing
+    const validationResult = validateEarthquakeResponse(earthquakesResponse.data);
 
-    console.log(`[EARTHQUAKES] Got ${processed.length} earthquakes for ${timeRange}`);
+    if (!validationResult.success) {
+      logger.error("Data validation failed", {
+        errorCount: validationResult.errorCount,
+        errors: validationResult.errors,
+      });
+      throw new Error(
+        `Validation failed with ${validationResult.errorCount} errors`
+      );
+    }
+
+    const response: EarthquakeResponse = validationResult.data!;
+    
+    // Additional feature-level validation with filtering
+    const featureValidation = validateAndFilterEarthquakes(response.features);
+    
+    if (featureValidation.errorCount > 0) {
+      logger.warn("Some earthquake features failed validation", {
+        total: response.features.length,
+        valid: featureValidation.validCount,
+        invalid: featureValidation.errorCount,
+      });
+    }
+
+    const processed = processEarthquakeData(featureValidation.data!);
+
+    logger.info(`[EARTHQUAKES] Validated and processed ${processed.length} earthquakes for ${timeRange}`, {
+      validationErrors: featureValidation.errorCount,
+    });
+    
     await storeEarthquakes(processed, timeRange);
   } catch (error) {
-    console.error("Error fetching earthquake data:", error);
+    logger.error("Error fetching earthquake data:", error);
     throw error;
   }
 }

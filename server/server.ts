@@ -94,8 +94,25 @@ app.get(
 
       const data: EarthquakeResponse = await response.json();
 
+      // Defensive checks before processing
+      if (!data || typeof data !== "object") {
+        throw new Error("Invalid response format: response is not an object");
+      }
+
       if (!data.features || !Array.isArray(data.features)) {
-        throw new Error("Invalid response format from USGS API");
+        throw new Error("Invalid response format from USGS API: missing or invalid features array");
+      }
+
+      if (data.features.length === 0) {
+        logger.warn(`No earthquake data available for ${timeRange}`);
+        return res.json({
+          earthquakes: [],
+          count: 0,
+          timeRange,
+          cached: false,
+          source: "usgs",
+          fetchedAt: new Date().toISOString(),
+        });
       }
 
       const earthquakes = processEarthquakeData(data.features);
