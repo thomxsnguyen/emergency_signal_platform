@@ -10,6 +10,7 @@ import {
   validateAndFilterEarthquakes,
 } from "./validation";
 import { logger } from "./logger";
+import { logValidationMetrics } from "./metrics";
 
 // Earthquake API with comprehensive validation
 export function processEarthquakeData(
@@ -64,6 +65,13 @@ export async function fetchAndStoreEarthquakes(timeRange: string): Promise<void>
     }
 
     const processed = processEarthquakeData(featureValidation.data!);
+
+    // Log metrics for error tracking and reduction measurement
+    await logValidationMetrics(
+      response.features.length,
+      featureValidation.validCount,
+      featureValidation.errorCount
+    );
 
     logger.info(`[EARTHQUAKES] Validated and processed ${processed.length} earthquakes for ${timeRange}`, {
       validationErrors: featureValidation.errorCount,
