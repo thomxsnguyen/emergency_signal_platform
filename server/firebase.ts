@@ -2,16 +2,20 @@ import admin from "firebase-admin";
 import { Request, Response, NextFunction } from "express";
 import path from "path";
 import { createRequire } from "module";
+import { fileURLToPath } from "url";
 
 // Initialize Firebase Admin SDK
 // Make sure you have FIREBASE_SERVICE_ACCOUNT_JSON environment variable set
 // Or place a service-account-key.json in the server directory
 const require = createRequire(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const serviceAccountPath =
-  process.env.FIREBASE_SERVICE_ACCOUNT_JSON || "./service-account-key.json";
+  process.env.FIREBASE_SERVICE_ACCOUNT_JSON || "service-account-key.json";
 const resolvedServiceAccountPath = path.isAbsolute(serviceAccountPath)
   ? serviceAccountPath
-  : path.resolve(process.cwd(), serviceAccountPath);
+  : path.resolve(__dirname, serviceAccountPath);
 
 try {
   const serviceAccount = require(resolvedServiceAccountPath);

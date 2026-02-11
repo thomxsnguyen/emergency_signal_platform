@@ -138,7 +138,13 @@ function App() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
+                <circle
+                  cx="20"
+                  cy="20"
+                  r="18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
                 <path
                   d="M10 20 Q 20 10, 30 20 Q 20 30, 10 20"
                   stroke="currentColor"
@@ -180,7 +186,9 @@ function App() {
             </div>
             <div className="earthquake-count">
               <span className="count-label">Earthquakes:</span>
-              <span className="count-value">{fetchState.earthquakes.length}</span>
+              <span className="count-value">
+                {fetchState.earthquakes.length}
+              </span>
             </div>
           </div>
         </div>
@@ -211,7 +219,10 @@ function App() {
 
         <footer className="app-footer">
           <div className="footer-content">
-            <p>&copy; {new Date().getFullYear()} Faultline | Earthquake Monitoring System</p>
+            <p>
+              &copy; {new Date().getFullYear()} Faultline | Earthquake
+              Monitoring System
+            </p>
           </div>
         </footer>
       </div>

@@ -93,7 +93,7 @@ export default function FirebaseLogin({ onLogin }: Props) {
     <div className="login-container">
       <Navbar onAboutClick={() => setShowAbout(true)} />
       <AboutModal isOpen={showAbout} onClose={() => setShowAbout(false)} />
-      
+
       <div className="login-content">
         <div className="login-form">
           <div className="form-header">
@@ -102,7 +102,9 @@ export default function FirebaseLogin({ onLogin }: Props) {
           </div>
 
           {error && <div className="error-message">{error}</div>}
-          {user && <div className="success-message">Welcome, {user.displayName}!</div>}
+          {user && (
+            <div className="success-message">Welcome, {user.displayName}!</div>
+          )}
 
           <button
             onClick={handleGoogleLogin}

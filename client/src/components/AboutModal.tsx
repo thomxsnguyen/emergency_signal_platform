@@ -17,14 +17,15 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
         </button>
         <h2>About Faultline</h2>
         <p>
-          Faultline is a real-time earthquake monitoring and emergency alert system
-          designed to provide rapid situational awareness during seismic events.
+          Faultline is a real-time earthquake monitoring and emergency alert
+          system designed to provide rapid situational awareness during seismic
+          events.
         </p>
         <h3>Our Mission</h3>
         <p>
-          To deliver accurate, timely earthquake data and emergency notifications
-          to organizations and authorities, enabling faster response and better
-          disaster preparedness.
+          To deliver accurate, timely earthquake data and emergency
+          notifications to organizations and authorities, enabling faster
+          response and better disaster preparedness.
         </p>
         <h3>Features</h3>
         <ul>
