@@ -22,3 +22,5 @@ npm run dev
 - `GET /api/health`
 
 Data source: USGS Earthquake API
+
+(work in progress)
